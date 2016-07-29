@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by simon on 28.07.2016.
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 public class Database {
 
     private ArrayList<Pokemon> pokeList = new ArrayList<>();
+    Map<Integer,Pokemon> pokeMap = new TreeMap<>();
     private Pokelyzer pokelyzer;
 
     public Database(Pokelyzer pokelyzer) {
@@ -33,6 +36,9 @@ public class Database {
     public void addPokemon(Pokemon pokemon) {
         if(!pokeList.contains(pokemon)) {
             pokeList.add(pokemon);
+        }
+        if(!pokeMap.containsKey(pokemon.getId())) {
+            pokeMap.put(pokemon.getId(), pokemon);
         }
     }
 
@@ -59,13 +65,20 @@ public class Database {
             Element mainRootElement = doc.createElementNS("Pokemons", "Pokemons");
             doc.appendChild(mainRootElement);
 
-            for (int i = 0; i < pokeList.size(); i++) {
-                mainRootElement.appendChild(getPokemon(doc, String.valueOf(i), pokeList.get(i)));
+            Pokemon[] pokeArray = pokeMap.values().toArray(new Pokemon[0]);
+
+            for (int i = 0; i < pokeArray.length; i++) {
+                mainRootElement.appendChild(getPokemon(doc, String.valueOf(i), pokeArray[i]));
             }
+
+//            for (int i = 0; i < pokeList.size(); i++) {
+//                mainRootElement.appendChild(getPokemon(doc, String.valueOf(i), pokeList.get(i)));
+//            }
 
         }
         catch(Exception e) {
             System.out.println("Converting the Pokemon Database to XML failed!");
+            System.out.println(e);
         }
 
         TransformerFactory transformerFactory =

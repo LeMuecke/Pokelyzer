@@ -18,18 +18,16 @@ public class APIScraper {
         pokes = readFromPokevision();
         System.out.println(pokes);
 
+        pokes = pokes.substring(pokes.indexOf('['));
+
         String array[] = pokes.split(",");
 
-        for (int i = 3; i < array.length; i = i + 8) {
-            int id = 0;
-            if(i == 3) id = Integer.parseInt(array[i-2].split(":")[2]);
-            else Integer.parseInt(array[i-2].split(":")[1]);
-
-            Pokemon pokemon = new Pokemon(id,
-                    Integer.parseInt(array[i + 1].split(":")[1]),
-                    Integer.parseInt(array[i].split(":")[1]),
+        for (int i = 0; i < array.length; i = i + 8) {
+            Pokemon pokemon = new Pokemon(Integer.parseInt(array[i].split(":")[1]),
+                    Integer.parseInt(array[i + 3].split(":")[1]),
+                    Integer.parseInt(array[i + 2].split(":")[1]),
                     (int)(System.currentTimeMillis()/1000),
-                    new Coordinate(Double.parseDouble(array[i + 2].split(":")[1]),Double.parseDouble(array[i + 3].split(":")[1])));
+                    new Coordinate(Double.parseDouble(array[i + 4].split(":")[1]),Double.parseDouble(array[i + 5].split(":")[1])));
             pokelyzer.getPokemonDatabase().addPokemon(pokemon);
         }
 
