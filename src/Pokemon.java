@@ -3,16 +3,22 @@
  */
 public class Pokemon {
 
+    private int id;
     private int pokedexNumber;
     private int despawnTimestamp;
     private int creationTimestamp;      //the time the programm pulled from pokevision
     private Coordinate coordinate;
 
-    public Pokemon(int pokedexNumber, int despawnTimestamp, int creationTimestamp, Coordinate coordinate) {
+    public Pokemon(int id, int pokedexNumber, int despawnTimestamp, int creationTimestamp, Coordinate coordinate) {
+        this.id = id;
         this.pokedexNumber = pokedexNumber;
         this.despawnTimestamp = despawnTimestamp;
         this.creationTimestamp = creationTimestamp;
         this.coordinate = coordinate;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getPokedexNumber() {

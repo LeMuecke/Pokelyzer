@@ -31,7 +31,9 @@ public class Database {
     }
 
     public void addPokemon(Pokemon pokemon) {
-        pokeList.add(pokemon);
+        if(!pokeList.contains(pokemon)) {
+            pokeList.add(pokemon);
+        }
     }
 
     public boolean removePokemon(Pokemon pokemon) {
@@ -54,11 +56,11 @@ public class Database {
             icBuilder = icFactory.newDocumentBuilder();
             doc = icBuilder.newDocument();
 
-            Element mainRootElement = doc.createElementNS("Pokemons(why do I need this?)", "Pokemons");
+            Element mainRootElement = doc.createElementNS("Pokemons", "Pokemons");
             doc.appendChild(mainRootElement);
 
             for (int i = 0; i < pokeList.size(); i++) {
-                mainRootElement.appendChild(getPokemon(doc, String.valueOf(i), pokeList.get(0)));
+                mainRootElement.appendChild(getPokemon(doc, String.valueOf(i), pokeList.get(i)));
             }
 
         }
@@ -94,6 +96,7 @@ public class Database {
     private static Node getPokemon(Document doc, String id, Pokemon pokemon) {
         Element pokemonElement = doc.createElement("Pokemon");
         pokemonElement.setAttribute("id", id);
+        pokemonElement.appendChild(getPokemonElements(doc, pokemonElement, "pokeId", String.valueOf(pokemon.getId())));
         pokemonElement.appendChild(getPokemonElements(doc, pokemonElement, "pdN", String.valueOf(pokemon.getPokedexNumber())));
         pokemonElement.appendChild(getPokemonElements(doc, pokemonElement, "dsT", String.valueOf(pokemon.getDespawnTimestamp())));
         pokemonElement.appendChild(getPokemonElements(doc, pokemonElement, "cT", String.valueOf(pokemon.getCreationTimestamp())));
