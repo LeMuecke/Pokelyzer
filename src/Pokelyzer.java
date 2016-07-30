@@ -6,10 +6,8 @@ import java.util.Scanner;
 public class Pokelyzer {
 
     private Database pokemonDatabase;
-    private APIScraper apiScraper;
 
     public Pokelyzer() {
-        this.apiScraper = new APIScraper(this);
         this.pokemonDatabase = new Database(this);
     }
 
@@ -17,19 +15,20 @@ public class Pokelyzer {
         return pokemonDatabase;
     }
 
-    public APIScraper getApiScraper() {
-        return apiScraper;
-    }
-
-    public void analyse() {
-        apiScraper.writePokemonToDatabase();
-    }
 
     public static void main(String[] args) {
+
+        if(Configurator.LATITUDES.length != Configurator.LONGITUDES.length) {
+            throw new IllegalArgumentException("Different number of Latitude/Longitude elements!");
+        }
+
         Pokelyzer pokelyzer = new Pokelyzer();
 
-        Thread scraper = new Thread(new ScraperThread(pokelyzer));
-        scraper.start();
+        Thread[] scrapers = new Thread[Configurator.LATITUDES.length];
+        for (int i = 0; i < Configurator.LATITUDES.length; i++) {
+            scrapers[i] = new Thread(new ScraperThread(pokelyzer,Configurator.LATITUDES[i],Configurator.LONGITUDES[i]));
+            scrapers[i].start();
+        }
 
         System.out.println("Type \"end\" to end and save the project.");
         Scanner scanner = new Scanner(System.in);

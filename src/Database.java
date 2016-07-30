@@ -33,7 +33,7 @@ public class Database {
         this.pokelyzer = pokelyzer;
     }
 
-    public void addPokemon(Pokemon pokemon) {
+    public synchronized void addPokemon(Pokemon pokemon) {
         if(!pokeList.contains(pokemon)) {
             pokeList.add(pokemon);
         }

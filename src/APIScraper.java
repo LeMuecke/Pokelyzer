@@ -8,10 +8,14 @@ import javax.net.ssl.HttpsURLConnection;
 public class APIScraper {
 
     public Pokelyzer pokelyzer;
-    public String pokes;
+    private String pokes;
+    private double longitude;
+    private double latitude;
 
-    public APIScraper(Pokelyzer pokelyzer) {
+    public APIScraper(Pokelyzer pokelyzer, double latitude, double longitude) {
         this.pokelyzer = pokelyzer;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public void writePokemonToDatabase() {
@@ -19,15 +23,18 @@ public class APIScraper {
         System.out.println(pokes);
 
         pokes = pokes.substring(pokes.indexOf('['));
+        pokes = pokes.substring(0,pokes.length()-2);
+
+        if(pokes.equals("[")) return;     //TODO: Make this more elegant
 
         String array[] = pokes.split(",");
 
-        for (int i = 0; i < array.length; i = i + 8) {
+        for (int i = 0; i < array.length; i = i + 5) {
             Pokemon pokemon = new Pokemon(Integer.parseInt(array[i].split(":")[1]),
                     Integer.parseInt(array[i + 3].split(":")[1]),
-                    Integer.parseInt(array[i + 2].split(":")[1]),
+                    Integer.parseInt(array[i + 4].split(":")[1].substring(0,array[i + 4].split(":")[1].length()-1)),
                     (int)(System.currentTimeMillis()/1000),
-                    new Coordinate(Double.parseDouble(array[i + 4].split(":")[1]),Double.parseDouble(array[i + 5].split(":")[1])));
+                    new Coordinate(Double.parseDouble(array[i + 1].split(":")[1]),Double.parseDouble(array[i + 2].split(":")[1])));
             pokelyzer.getPokemonDatabase().addPokemon(pokemon);
         }
 
@@ -37,7 +44,7 @@ public class APIScraper {
     public String readFromPokevision() {
         HttpsURLConnection conn;
         try {
-            conn = (HttpsURLConnection) (new URL("https://pokevision.com/map/data/" + Configurator.LATITUDE + "/" +  Configurator.LONGITUDE).openConnection());
+            conn = (HttpsURLConnection) (new URL("https://pokevision.com/map/data/" + latitude + "/" +  longitude).openConnection());
         } catch (IOException e) {
             System.out.println("Connection to Pokevision could not be established! Aborting.");
             e.printStackTrace();

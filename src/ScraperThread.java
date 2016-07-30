@@ -6,9 +6,9 @@ public class ScraperThread implements Runnable {
     Pokelyzer pokelyzer;
     APIScraper apiScraper;
 
-    public ScraperThread(Pokelyzer pokelyzer) {
+    public ScraperThread(Pokelyzer pokelyzer, double latitude, double longitude) {
         this.pokelyzer = pokelyzer;
-        apiScraper = new APIScraper(pokelyzer);
+        apiScraper = new APIScraper(pokelyzer,latitude,longitude);
     }
 
     @Override
