@@ -17,7 +17,7 @@ public class ScraperThread implements Runnable {
             apiScraper.writePokemonToDatabase();
             System.out.println("New batch of Pokemon just arrived ;)");
             try {
-                Thread.sleep(60000);
+                Thread.sleep(Configurator.THREAD_SLEEP_MILLISECONDS);
             } catch (InterruptedException e) {
                 System.out.println("The 60s sleep of the ScraperThread got interrupted!");
                 e.printStackTrace();
